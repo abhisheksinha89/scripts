@@ -2,7 +2,7 @@
 import sys
 from ConfigParser import ConfigParser
 
-_defaultConfigFile="test.ini"
+_defaultConfigFile="mssql.conf"
 
 #Get the command line parameters
 if len(sys.argv) == 2:
@@ -18,12 +18,12 @@ config = ConfigParser()
 config.read(_defaultConfigFile)
 
 # read values from a section
-string_val = config.get('section_a', 'string_val')
-bool_val = config.getboolean('section_a', 'bool_val')
-int_val = config.getint('section_a', 'int_val')
-float_val = config.getfloat('section_a', 'pi_val')
+logdir = config.get('Database_Configuration', 'SQL_TEMPDB_LOG_DIR')
+logFileGrowth = config.getint('Database_Configuration', 'SQL_TEMPDB_LOG_FILE_GROWTH')
+ssrs = config.getboolean('Service_Configuration', 'SSRS')
+certificateFileLocation = config.get('Security_Configuration', 'SSL_CERTIFICATE_FILE_LOCATION')
 
-print(string_val)
-print(bool_val)
-print(int_val)
-print(float_val)
+print(logdir)
+print(logFileGrowth)
+print(ssrs)
+print(certificateFileLocation)
