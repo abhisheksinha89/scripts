@@ -8,7 +8,8 @@ _defaultConfigFile="test.ini"
 if len(sys.argv) == 2:
 	_defaultConfigFile=sys.argv[1]
 elif len(sys.argv) > 2:
-	print("Usage: mssql-conf <fileName>\n<fileName> (optional) is the path to the config file, if not specified the default path is used")
+	print("Usage: mssql-conf.py <fileName>\n<fileName> (optional) is the path to the config file, if not specified the default path is used")
+	sys.exit()
 
 # instantiate
 config = ConfigParser()
