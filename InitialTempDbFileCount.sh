@@ -28,3 +28,6 @@ if [ $matchGetOptsArgs -eq 0 ];
     usage
 fi
 
+for ((i=0; i<$numberOfFiles; i++)); do
+  echo $i
+done
