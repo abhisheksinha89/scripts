@@ -1,32 +1,39 @@
 #!/usr/bin/python
+import argparse
 import sys
 import subprocess
 from ConfigParser import ConfigParser
 
-def usage():
-  print("Usage: mssql-conf [-apply or -init]")
-  sys.exit()
+#def usage():
+#  print("Usage: mssql-conf [-apply or -init]")
+#  sys.exit()
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-a", "--apply", help="Apply the configuration changes", action="store_true")
+parser.add_argument("-i", "--init", help="Initialize the configuration tool", action="store_true")
+args = parser.parse_args()
 
 _defaultConfigFile="mssql.conf"
 _initialTempDbFileCountScript="./InitialTempDbFileCount.sh"
-_verb=""
+
+
+
 
 #Get the command line parameters
-if len(sys.argv) == 2:
-	_verb=sys.argv[1]
-else:
-	usage();
+#if len(sys.argv) == 2:
+#	_verb=sys.argv[1]
+#else:
+#	usage();
 
 #mssql-conf -init 
 #decide what to do here
-if _verb=='-init':
+if args.init:
   print("Initializing...this currently does nothing")
 
 
 #mssql-conf -apply
 
-elif _verb=='-apply':
+elif args.apply:
   # instantiate
   config = ConfigParser()
 
@@ -41,6 +48,3 @@ elif _verb=='-apply':
   sqlTempDbAdditionalFileCount = config.getint('Database_Configuration','SQL_TEMPDB_ADDITIONAL_FILE_COUNT')
 
   subprocess.check_call([_initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
-
-else:
-  usage()
