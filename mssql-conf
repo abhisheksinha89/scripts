@@ -3,29 +3,44 @@ import sys
 import subprocess
 from ConfigParser import ConfigParser
 
+def usage():
+  print("Usage: mssql-conf [-apply or -init]")
+  sys.exit()
+
+
 _defaultConfigFile="mssql.conf"
 _initialTempDbFileCountScript="./InitialTempDbFileCount.sh"
-
+_verb=""
 
 #Get the command line parameters
 if len(sys.argv) == 2:
-	_defaultConfigFile=sys.argv[1]
-elif len(sys.argv) > 2:
-	print("Usage: mssql-conf.py <fileName>\n<fileName> (optional) is the path to the config file, if not specified the default path is used")
-	sys.exit()
+	_verb=sys.argv[1]
+else:
+	usage();
 
-# instantiate
-config = ConfigParser()
+#mssql-conf -init 
+#decide what to do here
+if _verb=='-init':
+  print("Initializing...this currently does nothing")
 
-# parse existing file
-config.read(_defaultConfigFile)
 
-# read values from a section
-logdir = config.get('Database_Configuration', 'SQL_TEMPDB_LOG_DIR')
-logFileGrowth = config.getint('Database_Configuration', 'SQL_TEMPDB_LOG_FILE_GROWTH')
-ssrs = config.getboolean('Service_Configuration', 'SSRS')
-certificateFileLocation = config.get('Security_Configuration', 'SSL_CERTIFICATE_FILE_LOCATION')
-sqlTempDbAdditionalFileCount = config.getint('Database_Configuration','SQL_TEMPDB_ADDITIONAL_FILE_COUNT')
+#mssql-conf -apply
 
-subprocess.check_call([_initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
+elif _verb=='-apply':
+  # instantiate
+  config = ConfigParser()
 
+  # parse existing file
+  config.read(_defaultConfigFile)
+
+  # read values from a section
+  logdir = config.get('Database_Configuration', 'SQL_TEMPDB_LOG_DIR')
+  logFileGrowth = config.getint('Database_Configuration', 'SQL_TEMPDB_LOG_FILE_GROWTH')
+  ssrs = config.getboolean('Service_Configuration', 'SSRS')
+  certificateFileLocation = config.get('Security_Configuration', 'SSL_CERTIFICATE_FILE_LOCATION')
+  sqlTempDbAdditionalFileCount = config.getint('Database_Configuration','SQL_TEMPDB_ADDITIONAL_FILE_COUNT')
+
+  subprocess.check_call([_initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
+
+else:
+  usage()
