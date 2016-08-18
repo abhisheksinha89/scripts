@@ -7,6 +7,9 @@ from ConfigParser import ConfigParser
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--apply", help="Apply the configuration changes", action="store_true")
 parser.add_argument("-i", "--init", help="Initialize the configuration tool", action="store_true")
+parser.add_argument("--set", nargs=2, help="--set <setting> <value>")
+parser.add_argument("--get", help="--get <setting> : Gets the value of that setting in the conf file")
+
 args = parser.parse_args()
 
 _defaultConfigFile="mssql.conf"
@@ -35,3 +38,13 @@ elif args.apply:
   sqlTempDbAdditionalFileCount = config.getint('Database_Configuration','SQL_TEMPDB_ADDITIONAL_FILE_COUNT')
 
   subprocess.check_call([_initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
+
+#mssql-conf -set option
+
+elif args.set:
+  print ("Currently only prints: {}".format(args.set))
+
+
+#mssql-conf --get option
+elif args.get:
+  print("Get the values for {}".format(args.get))

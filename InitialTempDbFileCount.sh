@@ -35,7 +35,6 @@ done
 
 if [ $matchGetOptsArgs -ne 3 ]; 
   then
-    printf "Args matched "+$matchGetOptsArgs
     usage
 fi
 
