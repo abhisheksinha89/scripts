@@ -14,10 +14,10 @@ set_subparser = subparser.add_parser("set")
 set_subparser.add_argument("--sa_password", action="store_true", help="Set the sa-password for the sql server instance")
 args = parser.parse_args()
 
-_defaultConfigFile="mssql.conf"
-_initialTempDbFileCountScript="./InitialTempDbFileCount.sh"
-_accept_choices = ['y', 'Y', 'yes', 'Yes']
-_decline_choices = ['n', 'N', 'no', 'No']
+defaultConfigFile="mssql.conf"
+initialTempDbFileCountScript="./InitialTempDbFileCount.sh"
+accept_choices = ['y', 'Y', 'yes', 'Yes']
+decline_choices = ['n', 'N', 'no', 'No']
 
 #mssql-conf -init 
 #decide what to do here
@@ -32,7 +32,7 @@ elif args.apply:
   config = ConfigParser()
 
   # parse existing file
-  config.read(_defaultConfigFile)
+  config.read(defaultConfigFile)
 
   # read values from a section
   logdir = config.get('Database_Configuration', 'SQL_TEMPDB_LOG_DIR')
@@ -41,13 +41,13 @@ elif args.apply:
   certificateFileLocation = config.get('Security_Configuration', 'SSL_CERTIFICATE_FILE_LOCATION')
   sqlTempDbAdditionalFileCount = config.getint('Database_Configuration','SQL_TEMPDB_ADDITIONAL_FILE_COUNT')
 
-  subprocess.check_call([_initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
+  subprocess.check_call([initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
 
 #mssql-conf -set option
 
 elif args.sa_password:
   password_try = 'y'
-  while (password_try in _accept_choices):
+  while (password_try in accept_choices):
     password = raw_input('Please type the new database System Administrator password: ')
     re_type_password = raw_input('Confirm the database System Administrator password: ')
     
