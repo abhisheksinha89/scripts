@@ -4,16 +4,20 @@ import sys
 import subprocess
 from ConfigParser import ConfigParser
 
+#command line parsing logic
+
 parser = argparse.ArgumentParser()
+subparser = parser.add_subparsers()
 parser.add_argument("-a", "--apply", help="Apply the configuration changes", action="store_true")
 parser.add_argument("-i", "--init", help="Initialize the configuration tool", action="store_true")
-parser.add_argument("--set", nargs=2, help="--set <setting> <value>")
-parser.add_argument("--get", help="--get <setting> : Gets the value of that setting in the conf file")
-
+set_subparser = subparser.add_parser("set")
+set_subparser.add_argument("--sa_password", action="store_true", help="Set the sa-password for the sql server instance")
 args = parser.parse_args()
 
 _defaultConfigFile="mssql.conf"
 _initialTempDbFileCountScript="./InitialTempDbFileCount.sh"
+_accept_choices = ['y', 'Y', 'yes', 'Yes']
+_decline_choices = ['n', 'N', 'no', 'No']
 
 #mssql-conf -init 
 #decide what to do here
@@ -41,10 +45,19 @@ elif args.apply:
 
 #mssql-conf -set option
 
-elif args.set:
-  print ("Currently only prints: {}".format(args.set))
+elif args.sa_password:
+  password_try = 'y'
+  while (password_try in _accept_choices):
+    password = raw_input('Please type the new database System Administrator password: ')
+    re_type_password = raw_input('Confirm the database System Administrator password: ')
+    
+    if password == re_type_password:
+      print("Applying the changes...")
+      #TODO: Logic for changing sa-password
+      break
+
+    else:
+      password_try = raw_input("The passwords entered do not match. Would you like to try again (y/n): ")
 
 
-#mssql-conf --get option
-elif args.get:
-  print("Get the values for {}".format(args.get))
+  
