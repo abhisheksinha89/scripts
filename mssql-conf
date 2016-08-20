@@ -2,7 +2,20 @@
 import argparse
 import sys
 import subprocess
+import os
 from ConfigParser import ConfigParser
+
+def CheckCredentials(set_credentials = False):
+  mssql_conf_password_var_name = 'MSSQL_CONF_PASSWORD'
+  mssql_conf_username_var_name = 'MSSQL_CONF_USERNAME'
+  mssql_conf_password = os.getenv(mssql_conf_password_var_name)
+  mssql_conf_username = os.getenv(mssql_conf_username_var_name)
+
+  if (set_credentials == True or mssql_conf_username == None or mssql_conf_password == None):
+    mssql_conf_username = raw_input("Enter Sql Server SA Username: ")
+    mssql_conf_password = raw_input("Enter Sql Server SA Password: ")
+    os.putenv(mssql_conf_username_var_name, mssql_conf_username)
+    os.putenv(mssql_conf_password_var_name, mssql_conf_password)
 
 #command line parsing logic
 
@@ -10,8 +23,9 @@ parser = argparse.ArgumentParser()
 subparser = parser.add_subparsers()
 parser.add_argument("-a", "--apply", help="Apply the configuration changes", action="store_true")
 parser.add_argument("-i", "--init", help="Initialize the configuration tool", action="store_true")
+parser.add_argument("-c", "--credentials", help="Enter the Sql Server Username and password for use in this session", action="store_true")
 set_subparser = subparser.add_parser("set")
-set_subparser.add_argument("--sa_password", action="store_true", help="Set the sa-password for the sql server instance")
+set_subparser.add_argument("--sa_password", action="store_true", help="Set the new sa-password for the sql server instance")
 args = parser.parse_args()
 
 defaultConfigFile="mssql.conf"
@@ -24,6 +38,9 @@ decline_choices = ['n', 'N', 'no', 'No']
 if args.init:
   print("Initializing...this currently does nothing")
 
+#mssql-conf --credentials
+if args.credentials:
+  CheckCredentials(True)
 
 #mssql-conf -apply
 
