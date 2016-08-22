@@ -41,7 +41,6 @@ accept_choices = ['y', 'Y', 'yes', 'Yes']
 decline_choices = ['n', 'N', 'no', 'No']
 
 GetCredentials()
-print(mssql_conf_username)
 
 #mssql-conf -init 
 if args.init:
@@ -67,7 +66,7 @@ elif args.apply:
   certificateFileLocation = config.get('Security_Configuration', 'SSL_CERTIFICATE_FILE_LOCATION')
   sqlTempDbAdditionalFileCount = config.getint('Database_Configuration','SQL_TEMPDB_ADDITIONAL_FILE_COUNT')
 
-  subprocess.check_call([initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', 'SA', '-p', 'Yukon900'])
+  subprocess.check_call([initialTempDbFileCountScript, '-n', str(sqlTempDbAdditionalFileCount), '-u', mssql_conf_username, '-p', mssql_conf_password])
 
 #mssql-conf -set option
 
